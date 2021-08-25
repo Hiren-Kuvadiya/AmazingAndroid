@@ -26,4 +26,5 @@ class Artical {
     lateinit var urlToImage: String
 
 
+
 }
