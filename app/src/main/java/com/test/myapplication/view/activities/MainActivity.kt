@@ -25,6 +25,7 @@ import com.test.myapplication.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 import java.lang.Exception
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -85,9 +86,12 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             progressBar.setVisibility(View.VISIBLE)
-            get_weather_data(city_name)
-            get_news_data(city_name)
-            forcast_weather_data(city_name)
+
+            CoroutineScope(Dispatchers.Main).launch {
+                    get_weather_data(city_name)
+                    get_news_data(city_name)
+                    forcast_weather_data(city_name)
+                }
         }
 
     }

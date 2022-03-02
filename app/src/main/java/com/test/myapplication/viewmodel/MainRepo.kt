@@ -35,7 +35,8 @@ class MainRepo @Inject constructor (@Named("weather")private val apiInterface: A
                 if(response.isSuccessful){
 
                     if(response.body()!=null ) {
-                        mutableList.value = response.body()!!
+                      //  mutableList.value = response.body()!!
+                        mutableList.postValue(response.body()!!)
                     }
                 }
             }
@@ -63,7 +64,8 @@ class MainRepo @Inject constructor (@Named("weather")private val apiInterface: A
                 if(response.isSuccessful){
 
                     if(response.body()!=null ) {
-                        mutableList.value = response.body()!!
+                      //  mutableList.value = response.body()!!
+                        mutableList.postValue(response.body()!!)
                     }
                 }
             }
@@ -91,7 +93,8 @@ class MainRepo @Inject constructor (@Named("weather")private val apiInterface: A
                 if(response.isSuccessful){
 
                     if(response.body()!=null ) {
-                        mutableList.value = response.body()!!
+                     //   mutableList.value = response.body()!!
+                        mutableList.postValue(response.body()!!)
                     }
                 }
             }
