@@ -10,11 +10,14 @@ import com.test.myapplication.model.WeatherResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by Kashif on 10/9/2019.
  */
-class MainRepo {
+
+class MainRepo @Inject constructor (@Named("weather")private val apiInterface: ApiInterface, @Named("news")private val newsApiInterface: ApiInterface){
 
     val TAG = javaClass.simpleName
 
@@ -22,7 +25,7 @@ class MainRepo {
         var mutableList: MutableLiveData<WeatherResponse> = MutableLiveData()
 
 
-        var apiInterface = APIClient.client.create(ApiInterface::class.java)
+       // var apiInterface = APIClient.client.create(ApiInterface::class.java)
 
         apiInterface.get_weather(city_name, appid).enqueue(object: Callback<WeatherResponse>{
 
@@ -50,7 +53,7 @@ class MainRepo {
         var mutableList: MutableLiveData<ForecastWeatherResponse> = MutableLiveData()
 
 
-        var apiInterface = APIClient.client.create(ApiInterface::class.java)
+      //  var apiInterface = APIClient.client.create(ApiInterface::class.java)
 
         apiInterface.forecast_weather(city_name, appid).enqueue(object: Callback<ForecastWeatherResponse>{
 
@@ -78,9 +81,9 @@ class MainRepo {
     fun fetch_news(topic: String, appid : String): MutableLiveData<NewsResponse>{
         var mutableList: MutableLiveData<NewsResponse> = MutableLiveData()
 
-        var apiInterface = APIClient.news_client.create(ApiInterface::class.java)
+      //  var apiInterface = APIClient.news_client.create(ApiInterface::class.java)
 
-        apiInterface.get_news(topic, appid).enqueue(object: Callback<NewsResponse>{
+        newsApiInterface.get_news(topic, appid).enqueue(object: Callback<NewsResponse>{
 
             override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
                 Log.e(TAG, "onResponse response="+response.toString() )

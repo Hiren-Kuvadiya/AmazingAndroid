@@ -2,20 +2,24 @@ package com.test.myapplication.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.test.myapplication.model.ForecastWeatherResponse
 import com.test.myapplication.model.NewsResponse
 import com.test.myapplication.model.WeatherResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel {
 
-    var main_repo: MainRepo? = null
+@HiltViewModel
+class MainViewModel @Inject constructor(var main_repo: MainRepo) : ViewModel(){
+
     var mutableLiveData: MutableLiveData<WeatherResponse>? = null
     var forecastMutableLiveData: MutableLiveData<ForecastWeatherResponse>? = null
     var newsMutableLiveData: MutableLiveData<NewsResponse>? = null
 
-    init {
+   /* init {
         main_repo = MainRepo()
-    }
+    }*/
 
     fun get_weather(city_name : String, appid : String): LiveData<WeatherResponse> {
         if (mutableLiveData == null) {

@@ -8,9 +8,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.test.myapplication.R
 import com.test.myapplication.utils.AppUtils
 import com.test.myapplication.utils.Constants
@@ -18,17 +20,30 @@ import com.test.myapplication.model.ForecastWeatherResponse
 import com.test.myapplication.model.NewsResponse
 import com.test.myapplication.model.WeatherResponse
 import com.test.myapplication.view.adapters.NewsAdapter
+import com.test.myapplication.viewmodel.MainRepo
 import com.test.myapplication.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import javax.inject.Inject
 
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    /*@Inject
+    lateinit var mainRepo : MainRepo*/
+
     private lateinit var news_adapter: NewsAdapter
-    val main_view_model = MainViewModel()
+
+    private lateinit var main_view_model : MainViewModel
+
+    //var main_view_model = MainViewModel()
+
 
     val TAG: String = javaClass.simpleName
 
@@ -37,6 +52,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        main_view_model = ViewModelProvider(this).get(MainViewModel::class.java)
 
         dec_format = DecimalFormat("#.##")
         dec_format.roundingMode = RoundingMode.CEILING
@@ -169,7 +186,7 @@ class MainActivity : AppCompatActivity() {
                 .observe(this, object : Observer<NewsResponse> {
 
                     override fun onChanged(t: NewsResponse) {
-                        Log.e("NEWS_RESPONSE:", "observe onChanged()=" + t)
+                        Log.e("NEWS_RESPONSE:", "observe onChanged()=" + Gson().toJson(t))
                         progressBar.setVisibility(View.GONE)
 
                         news_adapter.addData(t.articles)

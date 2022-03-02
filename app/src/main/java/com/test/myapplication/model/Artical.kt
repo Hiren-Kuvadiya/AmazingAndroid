@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 class Artical {
 
     @SerializedName("author")
-    lateinit var author: String
+    var author: String=""
 
     @SerializedName("title")
     lateinit var title: String
