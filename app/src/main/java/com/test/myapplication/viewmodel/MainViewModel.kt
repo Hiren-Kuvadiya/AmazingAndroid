@@ -23,11 +23,10 @@ class MainViewModel @Inject constructor(var main_repo: MainRepo) : ViewModel() {
 
     init {
         //     main_repo = MainRepo()
-
-
     }
 
 
+    // coroutines using launch
     fun get_weather(city_name: String, appid: String): LiveData<WeatherResponse> {
         if (mutableLiveData == null) {
 
@@ -39,6 +38,7 @@ class MainViewModel @Inject constructor(var main_repo: MainRepo) : ViewModel() {
         return mutableLiveData!!
     }
 
+    // coroutines using async and wait
     suspend fun forecast_weather(city_name: String, appid: String): LiveData<ForecastWeatherResponse> {
         if (forecastMutableLiveData == null) {
 
@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(var main_repo: MainRepo) : ViewModel() {
         return forecastMutableLiveData!!
     }
 
-
+    // coroutines using launch and join
     suspend fun get_news(topic: String, appid: String): LiveData<NewsResponse>? {
         if (newsMutableLiveData == null) {
             viewModelScope.launch() {
