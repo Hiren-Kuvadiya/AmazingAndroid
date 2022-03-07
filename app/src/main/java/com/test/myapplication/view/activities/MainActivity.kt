@@ -32,7 +32,6 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var news_adapter: NewsAdapter
 
-    private lateinit var main_view_model : MainViewModel
+    private lateinit var main_view_model: MainViewModel
 
     //var main_view_model = MainViewModel()
 
@@ -87,11 +86,18 @@ class MainActivity : AppCompatActivity() {
         } else {
             progressBar.setVisibility(View.VISIBLE)
 
-            CoroutineScope(Dispatchers.Main).launch {
-                    get_weather_data(city_name)
-                    get_news_data(city_name)
-                    forcast_weather_data(city_name)
-                }
+            get_weather_data(city_name)
+            get_news_data(city_name)
+            forcast_weather_data(city_name)
+
+
+            // Moved coroutines from activity to viewmodel
+          /*  CoroutineScope(Dispatchers.Main).launch {
+                get_weather_data(city_name)
+                get_news_data(city_name)
+                forcast_weather_data(city_name)
+            }*/
+
         }
 
     }
@@ -100,40 +106,40 @@ class MainActivity : AppCompatActivity() {
     fun get_weather_data(city_name: String) {
 
         main_view_model.get_weather(city_name, Constants.WEAHTER_API_KEY)
-                .observe(this, object : Observer<WeatherResponse> {
+            .observe(this, object : Observer<WeatherResponse> {
 
-                    override fun onChanged(t: WeatherResponse) {
-                        Log.e("WEATHER_RESPONSE:", "observe onChanged()=" + t)
-                        progressBar.setVisibility(View.GONE)
+                override fun onChanged(t: WeatherResponse) {
+                    Log.e("WEATHER_RESPONSE:", "observe onChanged()=" + t)
+                    progressBar.setVisibility(View.GONE)
 
-                        city_tv.text = city_name
+                    city_tv.text = city_name
 
-                        try {
+                    try {
 
-                            Log.e(TAG, "MAX_TEMP:" + t.weatherMain.temp_max)
-                            Log.e(TAG, "MIN_TEMP:" + t.weatherMain.temp_min)
+                        Log.e(TAG, "MAX_TEMP:" + t.weatherMain.temp_max)
+                        Log.e(TAG, "MIN_TEMP:" + t.weatherMain.temp_min)
 
-                            var max = dec_format.format(t.weatherMain.temp_max - 272.15)
-                            var min = dec_format.format(t.weatherMain.temp_min - 272.15)
+                        var max = dec_format.format(t.weatherMain.temp_max - 272.15)
+                        var min = dec_format.format(t.weatherMain.temp_min - 272.15)
 
-                            max_min_tv.text = "max " + (max) + " / " + "min " + (min)
-                        } catch (e: Exception) {
-
-                        }
-
-
-                        try {
-
-                            var env_str =
-                                    "http://openweathermap.org/img/w/" + t.weather.get(0).icon + ".png"
-                            Glide.with(this@MainActivity).load(env_str).into(env_iv)
-                        } catch (e: Exception) {
-
-                        }
+                        max_min_tv.text = "max " + (max) + " / " + "min " + (min)
+                    } catch (e: Exception) {
 
                     }
 
-                })
+
+                    try {
+
+                        var env_str =
+                            "http://openweathermap.org/img/w/" + t.weather.get(0).icon + ".png"
+                        Glide.with(this@MainActivity).load(env_str).into(env_iv)
+                    } catch (e: Exception) {
+
+                    }
+
+                }
+
+            })
 
     }
 
@@ -141,45 +147,45 @@ class MainActivity : AppCompatActivity() {
     fun forcast_weather_data(city_name: String) {
 
         main_view_model.forecast_weather(city_name, Constants.WEAHTER_API_KEY)
-                .observe(this, object : Observer<ForecastWeatherResponse> {
+            .observe(this, object : Observer<ForecastWeatherResponse> {
 
-                    override fun onChanged(t: ForecastWeatherResponse) {
-                        Log.e("FORE_WEATHER_RESPONSE:", "observe onChanged()=" + t)
-                        progressBar.setVisibility(View.GONE)
+                override fun onChanged(t: ForecastWeatherResponse) {
+                    Log.e("FORE_WEATHER_RESPONSE:", "observe onChanged()=" + t)
+                    progressBar.setVisibility(View.GONE)
 
-                        Log.e(TAG, "WEATHER_SIZE:" + t.weather.size)
+                    Log.e(TAG, "WEATHER_SIZE:" + t.weather.size)
 
-                        var templist = AppUtils.getList(t.weather)
+                    var templist = AppUtils.getList(t.weather)
 
-                        var day1_img =
-                                "http://openweathermap.org/img/w/" + templist.get(1).weather.get(0).icon + ".png"
-                        Glide.with(this@MainActivity).load(day1_img).into(date1_iv)
+                    var day1_img =
+                        "http://openweathermap.org/img/w/" + templist.get(1).weather.get(0).icon + ".png"
+                    Glide.with(this@MainActivity).load(day1_img).into(date1_iv)
 
-                        var max1 = dec_format.format(templist.get(1).weatherMain.temp_max - 272.15)
-                        var min1 = dec_format.format(templist.get(1).weatherMain.temp_min - 272.15)
-                        date1_tv.setText("" + max1 + " / " + (min1))
-
-
-                        var day2_img =
-                                "http://openweathermap.org/img/w/" + templist.get(2).weather.get(0).icon + ".png"
-                        Glide.with(this@MainActivity).load(day2_img).into(date2_iv)
-
-                        var max2 = dec_format.format(templist.get(2).weatherMain.temp_max - 272.15)
-                        var min2 = dec_format.format(templist.get(2).weatherMain.temp_min - 272.15)
-                        date2_tv.setText("" + max2 + " / " + min2)
+                    var max1 = dec_format.format(templist.get(1).weatherMain.temp_max - 272.15)
+                    var min1 = dec_format.format(templist.get(1).weatherMain.temp_min - 272.15)
+                    date1_tv.setText("" + max1 + " / " + (min1))
 
 
-                        var day3_img =
-                                "http://openweathermap.org/img/w/" + templist.get(3).weather.get(0).icon + ".png"
-                        Glide.with(this@MainActivity).load(day3_img).into(date3_iv)
+                    var day2_img =
+                        "http://openweathermap.org/img/w/" + templist.get(2).weather.get(0).icon + ".png"
+                    Glide.with(this@MainActivity).load(day2_img).into(date2_iv)
 
-                        var max3 = dec_format.format(templist.get(3).weatherMain.temp_max - 272.15)
-                        var min3 = dec_format.format(templist.get(3).weatherMain.temp_min - 272.15)
-                        date3_tv.setText("" + max3 + " / " + min3)
+                    var max2 = dec_format.format(templist.get(2).weatherMain.temp_max - 272.15)
+                    var min2 = dec_format.format(templist.get(2).weatherMain.temp_min - 272.15)
+                    date2_tv.setText("" + max2 + " / " + min2)
 
-                    }
 
-                })
+                    var day3_img =
+                        "http://openweathermap.org/img/w/" + templist.get(3).weather.get(0).icon + ".png"
+                    Glide.with(this@MainActivity).load(day3_img).into(date3_iv)
+
+                    var max3 = dec_format.format(templist.get(3).weatherMain.temp_max - 272.15)
+                    var min3 = dec_format.format(templist.get(3).weatherMain.temp_min - 272.15)
+                    date3_tv.setText("" + max3 + " / " + min3)
+
+                }
+
+            })
 
     }
 
@@ -187,17 +193,17 @@ class MainActivity : AppCompatActivity() {
     fun get_news_data(city_name: String) {
 
         main_view_model.get_news(city_name, Constants.NEWS_API_KEY)
-                .observe(this, object : Observer<NewsResponse> {
+            .observe(this, object : Observer<NewsResponse> {
 
-                    override fun onChanged(t: NewsResponse) {
-                        Log.e("NEWS_RESPONSE:", "observe onChanged()=" + Gson().toJson(t))
-                        progressBar.setVisibility(View.GONE)
+                override fun onChanged(t: NewsResponse) {
+                    Log.e("NEWS_RESPONSE:", "observe onChanged()=" + Gson().toJson(t))
+                    progressBar.setVisibility(View.GONE)
 
-                        news_adapter.addData(t.articles)
-                        news_adapter.notifyDataSetChanged()
+                    news_adapter.addData(t.articles)
+                    news_adapter.notifyDataSetChanged()
 
-                    }
-                })
+                }
+            })
     }
 
 
