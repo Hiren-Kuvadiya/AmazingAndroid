@@ -87,16 +87,18 @@ class MainActivity : AppCompatActivity() {
             progressBar.setVisibility(View.VISIBLE)
 
             get_weather_data(city_name)
-            get_news_data(city_name)
-            forcast_weather_data(city_name)
 
-
-            // Moved coroutines from activity to viewmodel
-          /*  CoroutineScope(Dispatchers.Main).launch {
-                get_weather_data(city_name)
+            CoroutineScope(Dispatchers.Main).launch {
                 get_news_data(city_name)
                 forcast_weather_data(city_name)
-            }*/
+            }
+
+            // Moved coroutines from activity to viewmodel
+            /*  CoroutineScope(Dispatchers.Main).launch {
+                  get_weather_data(city_name)
+                  get_news_data(city_name)
+                  forcast_weather_data(city_name)
+              }*/
 
         }
 
@@ -144,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun forcast_weather_data(city_name: String) {
+    suspend fun forcast_weather_data(city_name: String) {
 
         main_view_model.forecast_weather(city_name, Constants.WEAHTER_API_KEY)
             .observe(this, object : Observer<ForecastWeatherResponse> {
@@ -190,10 +192,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun get_news_data(city_name: String) {
+    suspend fun get_news_data(city_name: String) {
 
         main_view_model.get_news(city_name, Constants.NEWS_API_KEY)
-            .observe(this, object : Observer<NewsResponse> {
+            ?.observe(this, object : Observer<NewsResponse> {
 
                 override fun onChanged(t: NewsResponse) {
                     Log.e("NEWS_RESPONSE:", "observe onChanged()=" + Gson().toJson(t))

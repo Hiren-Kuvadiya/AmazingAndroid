@@ -9,6 +9,7 @@ import com.test.myapplication.model.NewsResponse
 import com.test.myapplication.model.WeatherResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,23 +39,26 @@ class MainViewModel @Inject constructor(var main_repo: MainRepo) : ViewModel() {
         return mutableLiveData!!
     }
 
-    fun forecast_weather(city_name: String, appid: String): LiveData<ForecastWeatherResponse> {
+    suspend fun forecast_weather(city_name: String, appid: String): LiveData<ForecastWeatherResponse> {
         if (forecastMutableLiveData == null) {
-            viewModelScope.launch() {
-                forecastMutableLiveData = main_repo!!.forecast_weather(city_name, appid)
-            }
+
+            forecastMutableLiveData = viewModelScope.async {
+                main_repo!!.forecast_weather(city_name, appid)
+            }.await()
+
         }
         return forecastMutableLiveData!!
     }
 
 
-    fun get_news(topic: String, appid: String): LiveData<NewsResponse> {
+    suspend fun get_news(topic: String, appid: String): LiveData<NewsResponse>? {
         if (newsMutableLiveData == null) {
             viewModelScope.launch() {
                 newsMutableLiveData = main_repo!!.fetch_news(topic, appid)
-            }
+            }.join()
+            return newsMutableLiveData!!
         }
-        return newsMutableLiveData!!
+        return null
     }
 
 }
