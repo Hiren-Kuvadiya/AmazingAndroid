@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var main_view_model: MainViewModel
 
+
     //var main_view_model = MainViewModel()
 
 

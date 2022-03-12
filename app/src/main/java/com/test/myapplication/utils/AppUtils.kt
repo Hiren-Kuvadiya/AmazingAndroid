@@ -1,9 +1,16 @@
 package com.test.myapplication.utils
 
+import android.content.Context
 import com.test.myapplication.model.WeatherResponse
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.content.ContextCompat.getSystemService
+
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import androidx.core.content.ContextCompat
+
 
 class AppUtils {
 
@@ -38,6 +45,12 @@ class AppUtils {
             }
 
             return templist
+        }
+
+         fun isNetworkConnected(mContext: Context): Boolean {
+            val connectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected
         }
 
     }

@@ -24,8 +24,6 @@ class WeatherWorker(private val context: Context, params: WorkerParameters) :
         var apiService = APIClient.client.create(ApiInterface::class.java)
         val call = apiService.get_weather("Surat", Constants.NEWS_API_KEY)
 
-        // call.enqueue(object : retrofit2.Callback)
-
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(
                 call: Call<WeatherResponse>,

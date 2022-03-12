@@ -1,8 +1,6 @@
 package com.test.myapplication
 
 import android.app.Application
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
@@ -19,14 +17,13 @@ class MyApplication : Application() {
         setUpWorker()
     }
 
-
     private fun setUpWorker() {
-        val constraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-        val workRequest =  PeriodicWorkRequest.Builder(WeatherWorker::class.java,30, TimeUnit.MINUTES).setConstraints(constraint).build();
+        val constraint =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+        val workRequest =
+            PeriodicWorkRequest.Builder(WeatherWorker::class.java, 30, TimeUnit.MINUTES)
+                .setConstraints(constraint).build();
         WorkManager.getInstance(this).enqueue(workRequest)
-
     }
 
-
 }
-

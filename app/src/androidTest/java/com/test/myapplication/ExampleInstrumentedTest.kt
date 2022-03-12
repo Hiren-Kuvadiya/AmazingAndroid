@@ -2,6 +2,7 @@ package com.test.myapplication
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.test.myapplication.utils.AppUtils
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,4 +22,14 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.test.myapplication", appContext.packageName)
     }
+
+    @Test
+    fun checkInternetConnectionTest(){
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val result = AppUtils.isNetworkConnected(appContext)
+
+        assert(result).equals(true)
+    }
+
+
 }
