@@ -5,12 +5,14 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.test.myapplication.R
@@ -72,6 +74,12 @@ class MainActivity : AppCompatActivity() {
         search_iv.setOnClickListener(View.OnClickListener {
             get_the_data()
         })
+
+        news_rv.setOnClickListener {
+
+            Log.e(TAG,"ITEM:CLICKED:")
+
+        }
 
     }
 

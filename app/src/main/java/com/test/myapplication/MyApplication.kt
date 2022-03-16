@@ -1,6 +1,7 @@
 package com.test.myapplication
 
 import android.app.Application
+import androidx.multidex.MultiDex
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
@@ -14,6 +15,8 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        MultiDex.install(this)
         setUpWorker()
     }
 
