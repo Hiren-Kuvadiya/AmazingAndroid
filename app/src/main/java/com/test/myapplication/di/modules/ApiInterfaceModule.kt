@@ -1,5 +1,6 @@
 package com.test.myapplication.di.modules
 
+import com.google.gson.Gson
 import com.test.myapplication.commons.APIClient
 import com.test.myapplication.commons.ApiInterface
 import dagger.Module
@@ -29,6 +30,12 @@ class ApiInterfaceModule @Inject constructor() {
     @Named("news")
     fun getNewsInterface(): ApiInterface{
         return APIClient.news_client.create(ApiInterface::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun getGson(): Gson{
+        return Gson()
     }
 
 }

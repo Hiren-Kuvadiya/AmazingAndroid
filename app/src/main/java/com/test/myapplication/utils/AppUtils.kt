@@ -9,7 +9,12 @@ import androidx.core.content.ContextCompat.getSystemService
 
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.util.Log
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class AppUtils {
@@ -51,6 +56,40 @@ class AppUtils {
             val connectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
             return activeNetworkInfo != null && activeNetworkInfo.isConnected
+        }
+
+
+        suspend fun testingCoroutinesInClass() {
+            var resultOne = "Android"
+            var resultTwo = "Kotlin"
+            Log.i("Launch", "Before")
+
+            delay(5000)
+
+            var abc = GlobalScope.launch(Dispatchers.IO) { resultOne = function1() }
+            var abc2 = GlobalScope.launch(Dispatchers.IO) { resultTwo = function2() }
+            Log.i("Launch", "After")
+
+            abc.join()
+            abc2.join()
+
+            val resultText = resultOne + resultTwo
+
+            Log.i("Launch", resultText)
+        }
+
+        suspend fun function1(): String {
+            delay(1000L)
+            val message = "function1"
+            Log.i("Launch", message)
+            return message
+        }
+
+        suspend fun function2(): String {
+            delay(100L)
+            val message = "function2"
+            Log.i("Launch", message)
+            return message
         }
 
     }

@@ -1,5 +1,6 @@
 package com.test.myapplication.view.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -21,6 +22,7 @@ import com.test.myapplication.utils.Constants
 import com.test.myapplication.model.ForecastWeatherResponse
 import com.test.myapplication.model.NewsResponse
 import com.test.myapplication.model.WeatherResponse
+import com.test.myapplication.services.MyAppService
 import com.test.myapplication.view.adapters.NewsAdapter
 import com.test.myapplication.viewmodel.MainRepo
 import com.test.myapplication.viewmodel.MainViewModel
@@ -44,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var main_view_model: MainViewModel
 
+    @Inject
+    public lateinit var mGson: Gson
 
     //var main_view_model = MainViewModel()
 
@@ -61,6 +65,16 @@ class MainActivity : AppCompatActivity() {
         dec_format = DecimalFormat("#.##")
         dec_format.roundingMode = RoundingMode.CEILING
 
+        GlobalScope.launch {
+          //  testing the scenario given to me in one technical interview
+            AppUtils.testingCoroutinesInClass()
+        }
+
+
+        // Just Playing with services
+        var serviceIntent = Intent(this, MyAppService::class.java)
+        startService(serviceIntent)
+
         set_news_data()
 
         search_et.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -77,10 +91,24 @@ class MainActivity : AppCompatActivity() {
 
         news_rv.setOnClickListener {
 
-            Log.e(TAG,"ITEM:CLICKED:")
+            Log.e(TAG, "ITEM:CLICKED:")
 
         }
 
+    }
+
+    suspend fun function1(): String {
+        delay(1000L)
+        val message = "function1"
+        Log.i("Launch", message)
+        return message
+    }
+
+    suspend fun function2(): String {
+        delay(100L)
+        val message = "function2"
+        Log.i("Launch", message)
+        return message
     }
 
 
@@ -207,7 +235,7 @@ class MainActivity : AppCompatActivity() {
             ?.observe(this, object : Observer<NewsResponse> {
 
                 override fun onChanged(t: NewsResponse) {
-                    Log.e("NEWS_RESPONSE:", "observe onChanged()=" + Gson().toJson(t))
+                    Log.e("NEWS_RESPONSE:", "observe onChanged()=" + mGson.toJson(t))
                     progressBar.setVisibility(View.GONE)
 
                     news_adapter.addData(t.articles)

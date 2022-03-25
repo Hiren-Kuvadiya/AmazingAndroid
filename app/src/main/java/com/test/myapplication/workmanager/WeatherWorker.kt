@@ -1,14 +1,17 @@
-package com.test.myapplication
+package com.test.myapplication.workmanager
 
 import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.google.gson.Gson
 import com.test.myapplication.commons.APIClient
 import com.test.myapplication.commons.ApiInterface
 import com.test.myapplication.model.WeatherResponse
 import com.test.myapplication.utils.Constants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +45,9 @@ class WeatherWorker(private val context: Context, params: WorkerParameters) :
 
         return Result.success()
     }
+
+
+
 
 }
 
